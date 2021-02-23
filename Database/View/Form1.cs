@@ -16,5 +16,11 @@ namespace Database
         {
             InitializeComponent();
         }
+
+        private void btnCrtNew_Click(object sender, EventArgs e)
+        {
+            View.Form2 f2 = new View.Form2();
+            f2.Show();
+        }
     }
 }
