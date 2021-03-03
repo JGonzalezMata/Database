@@ -15,13 +15,13 @@ namespace Database.View
     {
         private List<Personnel> _personnel;
         private List<SecondaryData> _secondaryData;
-        public Form3(Form2 f2, List<Personnel> _GetPersonnel)
+        public Form3(Form2 f2, List<Personnel> getPersonnel)
         {
             InitializeComponent();
             f2.Close();
             _personnel = new List<Personnel>();
             _secondaryData = new List<SecondaryData>();
-            _personnel = _GetPersonnel;
+            _personnel = getPersonnel;
             DTP();
         }
 
@@ -66,7 +66,7 @@ namespace Database.View
 
         private void DataBind()
         {
-            var _secData = new SecondaryData()
+            var secData = new SecondaryData()
             {
                 HSBCAccount = txtHSBC.Text,
                 PassportNo = txtPassport.Text,
@@ -81,7 +81,7 @@ namespace Database.View
                 EmerPhoneNumber = txtEmerNumb.Text
             };
 
-            _secondaryData.Add(_secData);
+            _secondaryData.Add(secData);
         }
         #endregion
     }

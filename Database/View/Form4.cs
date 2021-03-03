@@ -16,15 +16,15 @@ namespace Database.View
         private List<Personnel> _personnel;
         private List<SecondaryData> _secondaryData;
         private List<DepartmentData> _departmentData;
-        public Form4(Form3 f3, List<Personnel> _GetPersonnel, List<SecondaryData> _GetSecondaryData)
+        public Form4(Form3 f3, List<Personnel> getPersonnel, List<SecondaryData> getSecondaryData)
         {
             InitializeComponent();
             f3.Close();
             _personnel = new List<Personnel>();
             _secondaryData = new List<SecondaryData>();
             _departmentData = new List<DepartmentData>();
-            _personnel = _GetPersonnel;
-            _secondaryData = _GetSecondaryData;
+            _personnel = getPersonnel;
+            _secondaryData = getSecondaryData;
         }
         #region Buttons
         private void btnNext_Click(object sender, EventArgs e)
@@ -49,6 +49,7 @@ namespace Database.View
             {
                 Department = txtDepartment.Text,
                 Area = txtArea.Text,
+                Position = txtPosition.Text,
                 PaymentType = txtPayment.Text,
                 MailAccount = txtCompanyMail.Text,
                 BPMAccount = txtBPMAcc.Text,

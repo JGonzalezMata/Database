@@ -16,6 +16,8 @@ namespace Database.View
     {
         #region Declare
         private List<Personnel> _personnel;
+        private List<SecondaryData> _secondaryData;
+        private List<DepartmentData> _departmentData;
         private PrimDataVal _validate;
         #endregion
 
@@ -24,6 +26,15 @@ namespace Database.View
             InitializeComponent();
             _personnel = new List<Personnel>();
             _validate = new PrimDataVal();
+        }
+        public Form2(List<Personnel> personnel, List<SecondaryData> secondaryData, List<DepartmentData> departmentData)
+        {
+            InitializeComponent();
+            _personnel = personnel;
+            _secondaryData = secondaryData;
+            _departmentData = departmentData;
+            _validate = new PrimDataVal();
+            
         }
 
         #region Buttons
@@ -46,7 +57,7 @@ namespace Database.View
 
         private void DataBind()
         {
-            var _primData = new Personnel
+            var primData = new Personnel
             {
                 Name = txtUsrName.Text,
                 BirthDate = dtpBirthDate.Value.ToString("dd/MM/yyyy"),
@@ -60,10 +71,11 @@ namespace Database.View
                 Bloodtype = cmbBloodtype.SelectedItem.ToString(),
                 MaritalStatus = cmbMaritalStatus.SelectedItem.ToString(),
                 RFC = txtRFC.Text,
-                PhoneNumber = txtPhoneNumber.Text
+                PhoneNumber = txtPhoneNumber.Text,
+                UserImageRoute = ""
             };
 
-            _personnel.Add(_primData);
+            _personnel.Add(primData);
         }
 
         #endregion
@@ -71,7 +83,7 @@ namespace Database.View
         #region Events
         private void cmbEducation_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbEducation.SelectedItem == "Licenciature" || cmbEducation.SelectedItem == "Engineering" || cmbEducation.SelectedItem == "Master's Degree" || cmbEducation.SelectedItem == "Doctorate")
+            if (cmbEducation.SelectedItem.ToString() == "Licenciature" || cmbEducation.SelectedItem.ToString() == "Engineering" || cmbEducation.SelectedItem.ToString() == "Master's Degree" || cmbEducation.SelectedItem.ToString() == "Doctorate")
             {
                 txtCarreer.Enabled = true;
             }
