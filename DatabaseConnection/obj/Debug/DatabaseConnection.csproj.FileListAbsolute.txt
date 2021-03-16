@@ -1,0 +1,2 @@
+E:\repos\Database\Database\DatabaseConnection\obj\Debug\DatabaseConnection.csprojAssemblyReference.cache
+E:\repos\Database\Database\DatabaseConnection\obj\Debug\DatabaseConnection.csproj.CoreCompileInputs.cache

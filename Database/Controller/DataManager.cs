@@ -1,58 +1,121 @@
-﻿using System;
+﻿using ConnectionFramework;
+using Database.Model;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using Database.Model;
+using System.Threading.Tasks;
 
 namespace Database.Controller
 {
     public class DataManager
     {
+        private ConnectionManager dataManager = new ConnectionManager("Tester", "Abcd1234", "Information");
+
         #region Insert Values
-        public void InsertNewValue(List<Personnel> personnel, List<SecondaryData> secondaryData, List<DepartmentData> departmentData)
+
+        public async Task<string> InsertNewValue(string jsonObject, string userName)
         {
-            if (!personnel.Any() && !secondaryData.Any() && !departmentData.Any())
+            if (!string.IsNullOrEmpty(jsonObject))
             {
-                //TODO: Fill with インサート ~Insâto~ parameters
+                return await dataManager.CreateAndUpdate(jsonObject, userName);
+            }
+            else
+            {
+                return "You cannot send empty info";
             }
         }
 
-        public void UpdateValue(List<Personnel> personnel)
-        {
-            //TODO: Fill with 修正 ~Shûsei~ parameters
-        }
-        #endregion
+        #endregion Insert Values
 
         #region Delete Values
-        public void DeleteValue(List<Personnel> personnel)
+
+        public async Task<string> DeleteValue(string jsonObject, string userName)
         {
-            //TODO: Fill with デリート ~Delîto~ parameters
+            if (!string.IsNullOrEmpty(jsonObject))
+            {
+                return await dataManager.DeleteValue(jsonObject, userName);
+            }
+            else
+            {
+                return "A field to delete must be selected";
+            }
         }
-        #endregion
+
+        public bool LoginCheck(string jsonObject)
+        {
+            if (!string.IsNullOrEmpty(jsonObject))
+            {
+                return dataManager.LoginQuery(jsonObject);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public async Task<string> UpdateIndividualRow(string jsonObject, string updatedBy)
+        {
+            return await dataManager.UpdatePerRow(jsonObject, updatedBy);
+        }
+
+        #endregion Delete Values
 
         #region Get Values
-        public Tuple<List<Personnel>, List<SecondaryData>, List<DepartmentData>> GetPersonnels()
-        {
-            var personnel = new List<Personnel>();
-            var departmentData = new List<DepartmentData>();
-            var secondaryData = new List<SecondaryData>();
 
-            DataSet ds = new DataSet(); //TODO: Replace this shit with the actual query
+        public List<Batch> GetPersonnels()
+        {
+            var batch = new List<Batch>();
+
+            DataSet ds = dataManager.GetAllData().Result;
             var dt = ds.Tables[0];
 
             foreach (DataRow dr in dt.Rows)
             {
-                var _personnel = new Personnel { Name = dr.Table.Rows[1].ToString(), BirthDate = dr.Table.Rows[1].ToString(), EmployeeNo = dr.Table.Rows[1].ToString(), EducationLevel = dr.Table.Rows[1].ToString(), Carreer = dr.Table.Rows[1].ToString(), PersonalMail = dr.Table.Rows[1].ToString(), CURP = dr.Table.Rows[1].ToString(), INE = dr.Table.Rows[1].ToString(), Gender = dr.Table.Rows[1].ToString(), Bloodtype = dr.Table.Rows[1].ToString(), MaritalStatus = dr.Table.Rows[1].ToString(), RFC = dr.Table.Rows[1].ToString(), PhoneNumber = dr.Table.Rows[1].ToString()};
-                var _secondaryData = new SecondaryData { HSBCAccount = dr.Table.Rows[1].ToString(), PassportNo = dr.Table.Rows[1].ToString(),  USVisa = dr.Table.Rows[1].ToString(), BirthState = dr.Table.Rows[1].ToString(), InfonativAccount = dr.Table.Rows[1].ToString(), PassportExpiration = dr.Table.Rows[1].ToString(), VisaExpiration = dr.Table.Rows[1].ToString(), CurrentAddress = dr.Table.Rows[1].ToString(), EmerContactRelationship = dr.Table.Rows[1].ToString(), EmerContactName = dr.Table.Rows[1].ToString(), EmerPhoneNumber = dr.Table.Rows[1].ToString()};
-                var _departmentData = new DepartmentData { Department = dr.Table.Rows[1].ToString(), Area = dr.Table.Rows[1].ToString(), PaymentType = dr.Table.Rows[1].ToString(), MailAccount = dr.Table.Rows[1].ToString(), BPMAccount = dr.Table.Rows[1].ToString(), ERPAccount = dr.Table.Rows[1].ToString(), Transportation = dr.Table.Rows[1].ToString(), PickupColony = dr.Table.Rows[1].ToString(), Route = dr.Table.Rows[1].ToString()};
+                var _batchElement = new Batch
+                {
+                    PersonName = dr["personName"].ToString(),
+                    BirthDate = dr["birthDate"].ToString(),
+                    EmployeeNo = dr["employeeNo"].ToString(),
+                    EducationLevel = dr["educationLevel"].ToString(),
+                    CarreerName = dr["carreerName"].ToString(),
+                    PersonalMail = dr["personalMail"].ToString(),
+                    CURP = dr["curp"].ToString(),
+                    INE = dr["ine"].ToString(),
+                    Gender = dr["gender"].ToString(),
+                    Bloodtype = dr["bloodType"].ToString(),
+                    MaritalStatus = dr["maritalStatus"].ToString(),
+                    RFC = dr["rfc"].ToString(),
+                    PhoneNumber = dr["phoneNumber"].ToString(),
+                    UserImageRoute = dr["userImageRoute"].ToString(),
+                    HSBCAccount = dr["hsbcAccount"].ToString(),
+                    PassportNo = dr["passportNo"].ToString(),
+                    USVisaNo = dr["usVisaNo"].ToString(),
+                    BirthState = dr["birthState"].ToString(),
+                    InfonavitNo = dr["infonavitNo"].ToString(),
+                    PassportExpiration = dr["passportExpiration"].ToString(),
+                    USVisaExpiration = dr["usVisaExpiration"].ToString(),
+                    CurrentAddress = dr["currentAddress"].ToString(),
+                    EmerContactRelationship = dr["emerContactRelationship"].ToString(),
+                    EmerContactName = dr["emerContactName"].ToString(),
+                    EmerContactPhone = dr["emerContactPhone"].ToString(),
+                    IMSSNo = dr["imssNo"].ToString(),
+                    Department = dr["department"].ToString(),
+                    Area = dr["area"].ToString(),
+                    Position = dr["position"].ToString(),
+                    PaymentType = dr["paymentType"].ToString(),
+                    MailAccount = dr["mailAccount"].ToString(),
+                    BPMAccount = dr["bpmAccount"].ToString(),
+                    ERPAccount = dr["erpAccount"].ToString(),
+                    Transportation = dr["transportation"].ToString(),
+                    PickupColony = dr["pickupColony"].ToString(),
+                    PickupRoute = dr["pickupRoute"].ToString()
+                };
 
-                personnel.Add(_personnel);
-                secondaryData.Add(_secondaryData);
-                departmentData.Add(_departmentData);
+                batch.Add(_batchElement);
             }
 
-            return Tuple.Create(personnel, secondaryData, departmentData);
+            return batch;
         }
-        #endregion
+
+        #endregion Get Values
     }
 }

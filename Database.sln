@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Database\Database.csproj", "{A4277EE4-5E7B-4E1D-AF5E-8C9D39A53817}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectionFramework", "ConnectionFramework\ConnectionFramework.csproj", "{CCE4FEED-7E12-4F0B-83E5-FF2DCC8C04F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A4277EE4-5E7B-4E1D-AF5E-8C9D39A53817}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4277EE4-5E7B-4E1D-AF5E-8C9D39A53817}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4277EE4-5E7B-4E1D-AF5E-8C9D39A53817}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCE4FEED-7E12-4F0B-83E5-FF2DCC8C04F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCE4FEED-7E12-4F0B-83E5-FF2DCC8C04F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCE4FEED-7E12-4F0B-83E5-FF2DCC8C04F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCE4FEED-7E12-4F0B-83E5-FF2DCC8C04F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
