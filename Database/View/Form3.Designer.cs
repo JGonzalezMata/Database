@@ -53,6 +53,8 @@ namespace Database.View
             this.label11 = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnNext = new System.Windows.Forms.Button();
+            this.txtIMSS = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // txtHSBC
@@ -80,6 +82,7 @@ namespace Database.View
             this.txtPassport.Name = "txtPassport";
             this.txtPassport.Size = new System.Drawing.Size(135, 26);
             this.txtPassport.TabIndex = 6;
+            this.txtPassport.Leave += new System.EventHandler(this.txtPassport_Leave);
             // 
             // label2
             // 
@@ -98,6 +101,7 @@ namespace Database.View
             this.txtUSVISA.Name = "txtUSVISA";
             this.txtUSVISA.Size = new System.Drawing.Size(135, 26);
             this.txtUSVISA.TabIndex = 8;
+            this.txtUSVISA.Leave += new System.EventHandler(this.txtUSVISA_Leave);
             // 
             // label3
             // 
@@ -168,6 +172,7 @@ namespace Database.View
             // dtpPassportExp
             // 
             this.dtpPassportExp.CalendarFont = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dtpPassportExp.Enabled = false;
             this.dtpPassportExp.Location = new System.Drawing.Point(408, 61);
             this.dtpPassportExp.Name = "dtpPassportExp";
             this.dtpPassportExp.Size = new System.Drawing.Size(200, 21);
@@ -176,6 +181,7 @@ namespace Database.View
             // dtpVisaExp
             // 
             this.dtpVisaExp.CalendarFont = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dtpVisaExp.Enabled = false;
             this.dtpVisaExp.Location = new System.Drawing.Point(408, 103);
             this.dtpVisaExp.Name = "dtpVisaExp";
             this.dtpVisaExp.Size = new System.Drawing.Size(200, 21);
@@ -283,12 +289,32 @@ namespace Database.View
             this.btnNext.UseVisualStyleBackColor = true;
             this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
             // 
+            // txtIMSS
+            // 
+            this.txtIMSS.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtIMSS.Location = new System.Drawing.Point(470, 192);
+            this.txtIMSS.Name = "txtIMSS";
+            this.txtIMSS.Size = new System.Drawing.Size(138, 26);
+            this.txtIMSS.TabIndex = 27;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Location = new System.Drawing.Point(390, 195);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(74, 19);
+            this.label12.TabIndex = 256;
+            this.label12.Text = "IMSS No";
+            // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(622, 345);
             this.ControlBox = false;
+            this.Controls.Add(this.txtIMSS);
+            this.Controls.Add(this.label12);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.txtEmerNumb);
@@ -347,5 +373,7 @@ namespace Database.View
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnNext;
+        private System.Windows.Forms.TextBox txtIMSS;
+        private System.Windows.Forms.Label label12;
     }
 }

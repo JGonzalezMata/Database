@@ -13,40 +13,71 @@ namespace Database.View
 {
     public partial class Form4 : Form
     {
-        private List<Personnel> _personnel;
-        private List<SecondaryData> _secondaryData;
-        private List<DepartmentData> _departmentData;
-        public Form4(Form3 f3, List<Personnel> getPersonnel, List<SecondaryData> getSecondaryData)
+        private Personnel _personnel;
+        private SecondaryData _secondaryData;
+        private DepartmentData _departmentData;
+        public Form4(Form3 f3, Personnel getPersonnel, SecondaryData getSecondaryData)
         {
             InitializeComponent();
             f3.Close();
-            _personnel = new List<Personnel>();
-            _secondaryData = new List<SecondaryData>();
-            _departmentData = new List<DepartmentData>();
+            _personnel = new Personnel();
+            _secondaryData = new SecondaryData();
+            _departmentData = new DepartmentData();
             _personnel = getPersonnel;
             _secondaryData = getSecondaryData;
         }
         #region Buttons
         private void btnNext_Click(object sender, EventArgs e)
         {
-            DataBind();
+            InputAllIntoBatch(_personnel, _secondaryData);
+            Form1.checkIfAlreadyEnter = 1;
+            this.Close();
         }
         
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            _personnel.Clear();
-            _secondaryData.Clear();
-            _departmentData.Clear();
+            _personnel = null;
+            _secondaryData = null;
+            _departmentData = null;
             this.Close();
         }
         #endregion
 
         #region Methods
 
-        private void DataBind()
+        private void InputAllIntoBatch(Personnel personnel, SecondaryData secondaryData)
         {
-            var depData = new DepartmentData()
+            var _batch = new Batch
             {
+                #region Batch
+                PersonName = personnel.PersonName,
+                BirthDate = personnel.BirthDate,
+                EmployeeNo = personnel.EmployeeNo,
+                EducationLevel = personnel.EducationLevel,
+                CarreerName = personnel.CarreerName,
+                PersonalMail = personnel.PersonalMail,
+                CURP = personnel.CURP,
+                INE = personnel.INE,
+                Gender = personnel.Gender,
+                Bloodtype = personnel.Bloodtype,
+                MaritalStatus = personnel.MaritalStatus,
+                RFC = personnel.RFC,
+                PhoneNumber = personnel.PhoneNumber,
+                UserImageRoute = personnel.UserImageRoute,
+
+                HSBCAccount = secondaryData.HSBCAccount,
+                InfonavitNo = secondaryData.InfonavitNo,
+                PassportNo = secondaryData.PassportNo,
+                PassportExpiration = secondaryData.PassportExpiration,
+                USVisaNo = secondaryData.USVisaNo,
+                USVisaExpiration = secondaryData.USVisaExpiration,
+                BirthState = secondaryData.BirthState,
+                CurrentAddress = secondaryData.CurrentAddress,
+                EmerContactRelationship = secondaryData.EmerContactRelationship,
+                EmerContactName = secondaryData.EmerContactName,
+                EmerContactPhone = secondaryData.EmerContactPhone,
+                IMSSNo = secondaryData.IMSSNo,
+
                 Department = txtDepartment.Text,
                 Area = txtArea.Text,
                 Position = txtPosition.Text,
@@ -54,12 +85,39 @@ namespace Database.View
                 MailAccount = txtCompanyMail.Text,
                 BPMAccount = txtBPMAcc.Text,
                 ERPAccount = txtERPAcc.Text,
-                Transportation = cmbTransportation.Text,
+                Transportation = cmbTransportation.SelectedItem.ToString(),
                 PickupColony = txtPickupColony.Text,
-                Route = txtRoute.Text
+                PickupRoute = txtRoute.Text, 
+                #endregion
             };
+
+            Form1.batch = _batch;
         }
 
+        private string FillMail(string mailName)
+        {
+            if (!mailName.Contains("@xinpoint.com"))
+            {
+                return mailName + "@xinpoint.com"; 
+            }
+            else
+            {
+                return mailName;
+            }
+        }
+
+        private string GetBPMAccount(string companyMail)
+        {
+            if (companyMail.Contains("@xinpoint.com"))
+            {
+                var replaced = companyMail.Replace("@xinpoint.com", "");
+                return replaced;
+            }
+            else
+            {
+                return companyMail;
+            }
+        }
         #endregion
 
         #region Events
@@ -77,6 +135,17 @@ namespace Database.View
             }
         }
 
+        private void txtCompanyMail_TextChanged(object sender, EventArgs e)
+        {
+            txtBPMAcc.Text = GetBPMAccount(txtCompanyMail.Text);
+        }
+
+        private void txtCompanyMail_Leave(object sender, EventArgs e)
+        {
+            txtCompanyMail.Text = FillMail(txtCompanyMail.Text);
+        }
         #endregion
+
+
     }
 }

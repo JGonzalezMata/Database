@@ -114,6 +114,8 @@ namespace Database.View
             this.txtCompanyMail.Name = "txtCompanyMail";
             this.txtCompanyMail.Size = new System.Drawing.Size(150, 26);
             this.txtCompanyMail.TabIndex = 5;
+            this.txtCompanyMail.TextChanged += new System.EventHandler(this.txtCompanyMail_TextChanged);
+            this.txtCompanyMail.Leave += new System.EventHandler(this.txtCompanyMail_Leave);
             // 
             // label4
             // 

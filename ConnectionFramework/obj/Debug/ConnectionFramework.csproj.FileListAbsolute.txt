@@ -1,0 +1,9 @@
+E:\repos\Database\Database\ConnectionFramework\bin\Debug\ConnectionFramework.dll
+E:\repos\Database\Database\ConnectionFramework\bin\Debug\ConnectionFramework.pdb
+E:\repos\Database\Database\ConnectionFramework\bin\Debug\Newtonsoft.Json.dll
+E:\repos\Database\Database\ConnectionFramework\bin\Debug\Newtonsoft.Json.xml
+E:\repos\Database\Database\ConnectionFramework\obj\Debug\ConnectionFramework.csprojAssemblyReference.cache
+E:\repos\Database\Database\ConnectionFramework\obj\Debug\ConnectionFramework.csproj.CoreCompileInputs.cache
+E:\repos\Database\Database\ConnectionFramework\obj\Debug\ConnectionFramework.csproj.CopyComplete
+E:\repos\Database\Database\ConnectionFramework\obj\Debug\ConnectionFramework.dll
+E:\repos\Database\Database\ConnectionFramework\obj\Debug\ConnectionFramework.pdb

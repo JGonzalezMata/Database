@@ -9,45 +9,38 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Database.Model;
 using Database.Controller;
+using System.IO;
 
 namespace Database.View
 {
     public partial class Form2 : Form
     {
         #region Declare
-        private List<Personnel> _personnel;
-        private List<SecondaryData> _secondaryData;
-        private List<DepartmentData> _departmentData;
+        private Personnel _personnel;
         private PrimDataVal _validate;
+        private OpenFileDialog imageRouteDialog;
+        private FileStream fileStream;
+        private string ImageRoute = "";
         #endregion
 
         public Form2()
         {
             InitializeComponent();
-            _personnel = new List<Personnel>();
+            _personnel = new Personnel();
             _validate = new PrimDataVal();
-        }
-        public Form2(List<Personnel> personnel, List<SecondaryData> secondaryData, List<DepartmentData> departmentData)
-        {
-            InitializeComponent();
-            _personnel = personnel;
-            _secondaryData = secondaryData;
-            _departmentData = departmentData;
-            _validate = new PrimDataVal();
-            
         }
 
         #region Buttons
         private void btnNext_Click(object sender, EventArgs e)
         {
-            //DataBind();
+            DataBind();
             Form3 f3 = new Form3(this, _personnel);
             f3.Show();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            _personnel.Clear();
+            _personnel = null;
             this.Close();
         }
 
@@ -59,11 +52,11 @@ namespace Database.View
         {
             var primData = new Personnel
             {
-                Name = txtUsrName.Text,
+                PersonName = txtUsrName.Text,
                 BirthDate = dtpBirthDate.Value.ToString("dd/MM/yyyy"),
                 EmployeeNo = txtEmployeeNo.Text,
                 EducationLevel = cmbEducation.SelectedItem.ToString(),
-                Carreer = txtCarreer.Text,
+                CarreerName = txtCarreer.Text,
                 PersonalMail = txtPerEmail.Text,
                 CURP = txtCURP.Text,
                 INE = txtINE.Text,
@@ -72,12 +65,38 @@ namespace Database.View
                 MaritalStatus = cmbMaritalStatus.SelectedItem.ToString(),
                 RFC = txtRFC.Text,
                 PhoneNumber = txtPhoneNumber.Text,
-                UserImageRoute = ""
+                UserImageRoute = ImageRoute
             };
 
-            _personnel.Add(primData);
+            _personnel = primData;
         }
 
+        private void ImageLoader()
+        {
+            imageRouteDialog = new OpenFileDialog();
+            imageRouteDialog.Filter = "Image files (*.jpg)|*.jpg";
+            imageRouteDialog.Title = "Pick employee image";
+            imageRouteDialog.ShowDialog();
+            try
+            {
+                if (!String.IsNullOrEmpty(imageRouteDialog.FileName))
+                {
+                    fileStream = File.OpenRead(imageRouteDialog.FileName);
+                    if (fileStream.Length <= 5120000)
+                    {
+                        pictureBox1.ImageLocation = imageRouteDialog.FileName;
+                        pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+                        ImageRoute = imageRouteDialog.FileName;
+                        imageRouteDialog.Dispose();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
         #endregion
 
         #region Events
@@ -98,6 +117,10 @@ namespace Database.View
             txtEmployeeNo.Text = _validate.GenerateEmployeeNomber(txtEmployeeNo.Text);
         }
 
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            ImageLoader();
+        }
         #endregion
     }
 }
