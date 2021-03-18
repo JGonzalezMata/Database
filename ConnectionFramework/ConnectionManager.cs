@@ -3,30 +3,23 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ConnectionFramework
 {
     public class ConnectionManager
     {
-        string connectionString;
+        private string connectionString;
+
         public ConnectionManager(string user, string password, string database)
         {
             connectionString = $"Server=DESKTOP-1BQ9MH1\\TestServer;Database={database};User Id={user};Password={password};";
         }
+
         #region Sql Process
+
         public async Task<string> CreateAndUpdate(string jsonObject, string createdBy)
         {
-            //var cmdText = $"execute DataManager @personName, @birthDate, @employeeNo, @educationLevel, @carreerName," +
-            //    $" @personalMail, @curp, @ine, @gender, @bloodType, @maritalStatus, @rfc," +
-            //    $" @phoneNumber, @hsbcAccount, @passportNo, @usVisaNo, @birthState, @infonavitNo, @passportExpiration," +
-            //    $" @usVisaExpiration, @currentAddress," +
-            //    $" @emerContactRelationship, @emerContactName, @emerContactPhone, @imssNo, @department, @area, @position, @paymentType," +
-            //    $" @mailAccount, @bpmAccount, @erpAccount, @transportation," +
-            //    $" @pickupColony, @pickupRoute, @userImageRoute, @createdBy, @updatedBy";
-
             var cmdText = "execute DataManager @personName, @birthDate, @employeeNo, @educationLevel, @carreerName," +
                 " @personalMail, @curp, @ine, @gender, @bloodType, @maritalStatus, @rfc, @phoneNumber," +
                 " @hsbcAccount, @passportNo, @usVisaNo, @birthState, @infonavitNo, @passportExpiration," +
@@ -152,13 +145,16 @@ namespace ConnectionFramework
             }
         }
 
-        #endregion 
+        #endregion Sql Process
+
         public SqlCommand BatchAddWithValue(string cmdText, SqlConnection databaseConnection, BatchObject batch, string createdBy, string updateBy)
+
         {
             var command = new SqlCommand(cmdText, databaseConnection);
             try
             {
                 #region Mucho texto 2
+
                 command.Parameters.Add("@personName", SqlDbType.VarChar, 255).Value = batch.PersonName;
                 command.Parameters.Add("@birthDate", SqlDbType.VarChar, 255).Value = batch.BirthDate;
                 command.Parameters.Add("@employeeNo", SqlDbType.VarChar, 255).Value = batch.EmployeeNo;
@@ -197,7 +193,8 @@ namespace ConnectionFramework
                 command.Parameters.Add("@userImageRoute", SqlDbType.VarChar, 255).Value = batch.UserImageRoute;
                 command.Parameters.Add("@createdBy", SqlDbType.VarChar, 255).Value = createdBy;
                 command.Parameters.Add("@updatedBy", SqlDbType.VarChar, 255).Value = createdBy;
-                #endregion
+
+                #endregion Mucho texto 2
 
                 return command;
             }

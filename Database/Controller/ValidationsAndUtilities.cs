@@ -1,14 +1,12 @@
 ﻿using Database.Model;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Configuration;
-using System.Text.RegularExpressions;
 using iText.Html2pdf;
 using iText.Kernel.Pdf;
-using iText.Layout;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Database.Controller
 {
@@ -21,24 +19,188 @@ namespace Database.Controller
             {
                 zero += "0";
             }
-            zero = zero + data;
+            zero += data;
             return zero;
         }
+
+        #region Validar PersonName
+        //Usando regex, comprobar si los datos son correctos
+        public bool ValidateName(string personName)
+        {
+            var regex = new Regex(@"^[A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙ]+( [A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙ]+)*$");
+            var match = regex.Match(personName);
+
+            if (match.Success)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public Tuple<bool, string> CheckPersonName(Personnel personnel)
+        {
+            string message = "";
+            bool isValid = true;
+            if (personnel.PersonName.Length == 0)
+            {
+                message = "Please type the person's name";
+                isValid = false;
+            }
+            else if (!ValidateName(personnel.PersonName))
+            {
+                message = "This person's name is invalid (does it containg numbers?).";
+                isValid = false;
+            }
+            else if (personnel.PersonName.Length > 255)
+            {
+                message = "This person's name is too long. \nI don't even know you managed to trigger this.";
+                isValid = false;
+            }
+            return Tuple.Create(isValid, message);
+        }
+        #endregion
+
+        #region Validar Telefono
+        public bool ValidatePhoneNumber(string tel)
+        {
+            var regex = new Regex(@"^[0-9]{10}");
+            var match = regex.Match(tel);
+
+            if (match.Success)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public Tuple<bool, string> CheckPersonPhoneNumber(Personnel personnel)
+        {
+            string message = "";
+            bool isValid = true;
+
+            if (personnel.PhoneNumber.Length == 0)
+            {
+                message = "Phone number field cannot be empty";
+                isValid = false;
+            }
+            else if (!ValidatePhoneNumber(personnel.PhoneNumber))
+            {
+                message = "This phone number is invalid (does it contain letters?)";
+                isValid = false;
+            }
+            else if (personnel.PhoneNumber.Length > 10)
+            {
+                message = "Phone number length exceeds 10 numbers";
+                isValid = false;
+            }
+            return Tuple.Create(isValid, message);
+        }
+        #endregion
+
+        #region Validar No Personnel
+        private bool ValidateEmployeeNumber(string noPersonnel)
+        {
+            var regex = new Regex(@"^[0-9]");
+            var match = regex.Match(noPersonnel);
+
+            if (match.Success)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public Tuple<bool, string> ComprobarNoPersonnel(Personnel personnel)
+        {
+            string employeeNumber = personnel.EmployeeNo;
+            string message = "";
+            bool isValid = true;
+
+            if (employeeNumber.Length == 0)
+            {
+                message = "Employee number cannot be empty";
+                isValid = false;
+            }
+            else if (!ValidateEmployeeNumber(employeeNumber))
+            {
+                message = "This employee number cointains text or other characters";
+                isValid = false;
+            }
+            else if (employeeNumber.Length > 8)
+            {
+                message = "This employee number length exceeds 8 characters";
+                isValid = false;
+            }
+            else if (employeeNumber == "00000000")
+            {
+                message = "Employee number cannot be only zeros";
+                isValid = false;
+            }
+            return Tuple.Create(isValid, message);
+        }
+        #endregion
     }
 
-    public class SecDataVal //Validations for Form3
+    public class SecDataVal : PrimDataVal //Validations for Form3
     {
+        public Tuple<bool, string> CheckEmerContactName(SecondaryData secondaryData)
+        {
+            string message = "";
+            bool isValid = true;
+            if (secondaryData.EmerContactName.Length == 0)
+            {
+                message = "Please type the person's name";
+                isValid = false;
+            }
+            else if (!ValidateName(secondaryData.EmerContactName))
+            {
+                message = "This person's name is invalid (does it containg numbers?).";
+                isValid = false;
+            }
+            else if (secondaryData.EmerContactName.Length > 255)
+            {
+                message = "This person's name is too long. \nI don't even know you managed to trigger this.";
+                isValid = false;
+            }
+            return Tuple.Create(isValid, message);
+        }
+
+        public Tuple<bool, string> CheckEmergencyPhoneNumber(SecondaryData secondaryData)
+        {
+            string message = "";
+            bool isValid = true;
+
+            if (secondaryData.EmerContactPhone.Length == 0)
+            {
+                message = "Phone number field cannot be empty";
+                isValid = false;
+            }
+            else if (!ValidatePhoneNumber(secondaryData.EmerContactPhone))
+            {
+                message = "This phone number is invalid (does it contain letters?)";
+                isValid = false;
+            }
+            else if (secondaryData.EmerContactPhone.Length > 10)
+            {
+                message = "Phone number length exceeds 10 numbers";
+                isValid = false;
+            }
+            return Tuple.Create(isValid, message);
+        }
     }
 
     public class DepDataVal //Validations for Form4
     {
     }
 
-    public class GeneralManager
+    public class GeneralManager //Files management
     {
         private RouteManager routeManager;
 
         #region Store images method
+
         public string StoreImage(string fileName, string employeeNo)
         {
             routeManager = new RouteManager(ConfigurationManager.AppSettings["route"]);
@@ -59,7 +221,8 @@ namespace Database.Controller
                             fileExists = new FileInfo(getFileList[0]);
                             if (fileExists.Exists)
                             {
-                                imageData.Replace(Path.Combine(route, imageData.Name), Path.Combine(route, "Old.jpg"), true);
+                                imageData.CopyTo(Path.Combine(route, imageData.Name));
+                                //imageData.Replace(Path.Combine(route, imageData.Name), Path.Combine(route, "Old.jpg"), true);
                             }
                         }
                         else
@@ -74,7 +237,7 @@ namespace Database.Controller
                     }
                     result = Path.Combine(route, imageData.Name);
                 }
-                catch (IOException iEx)
+                catch (IOException)
                 {
                     return result = Path.Combine(route, imageData.Name);
                 }
@@ -85,10 +248,12 @@ namespace Database.Controller
             }
 
             return result;
-        } 
-        #endregion
+        }
+
+        #endregion Store images method
 
         #region Create cards method
+
         public Tuple<string, bool> CreateCard(List<Batch> batchList)
         {
             var result = "";
@@ -180,7 +345,15 @@ namespace Database.Controller
                 result = "File failed to be created, please try again";
                 return Tuple.Create(result, boolResult);
             }
-        } 
-        #endregion
+        }
+
+        #endregion Create cards method
+
+        public Tuple<string, bool> OnClosing()
+        {
+            routeManager = new RouteManager(ConfigurationManager.AppSettings["route"]);
+            var result = routeManager.RemoveTemporaryFile("Tarjetas.pdf");
+            return Tuple.Create(result.Item1, result.Item2);
+        }
     }
 }

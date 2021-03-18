@@ -1,41 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using Database.Controller;
 using Database.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Database.Controller;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Database
 {
     public partial class Form1 : Form
     {
         #region Global variables
+
         public DataManager dataManager;
         public static Batch batch;
         public Batch _existingRecords;
         public static int checkIfAlreadyEnter = 0;
-        List<Batch> batchList;
-        List<Batch> existingEntries;
-        string userName;
-        string employeeNo;
-        ContextMenu contextMenu;
-        MenuItem deleteItem;
-        MenuItem sendToBatch;
-        GeneralManager generalManager;
-        #endregion
+        private List<Batch> batchList;
+        private List<Batch> existingEntries;
+        private string userName;
+        private string employeeNo;
+        private ContextMenu contextMenu;
+        private readonly MenuItem deleteItem;
+        private readonly MenuItem sendToBatch;
+        private readonly GeneralManager generalManager;
+        private OpenFileDialog imageRouteDialog;
+        private FileStream fileStream;
+
+        #endregion Global variables
+
         public Form1()
         {
             InitializeComponent();
             batch = new Batch();
-            batchList = new List<Batch>();            
+            batchList = new List<Batch>();
             dataManager = new DataManager();
             contextMenu = new ContextMenu();
             generalManager = new GeneralManager();
@@ -45,7 +49,7 @@ namespace Database
             sendToBatch.Click += SendToBatch_Click;
             existingEntries = new List<Batch>(dataManager.GetPersonnels());
             //TestingInfo();
-            FillDataGrid(dgvExistingRecords,existingEntries);
+            FillDataGrid(dgvExistingRecords, existingEntries);
             //FillDataGrid(dgvUsers, batchList);
         }
 
@@ -65,7 +69,6 @@ namespace Database
         {
             var columnName = dgvExistingRecords.Columns[e.ColumnIndex].Name;
             var jObject = new JObject();
-            
 
             if (columnName != "EmployeeNo" && MessageBox.Show("Do you wish to update this field?", "Confirm", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {
@@ -98,17 +101,20 @@ namespace Database
 
         private void dgvUsers_MouseClick(object sender, MouseEventArgs e)
         {
+            var gridIndex = dgvExistingRecords.HitTest(e.X, e.Y).RowIndex;
+            var columnIndex = dgvExistingRecords.HitTest(e.X, e.Y).ColumnIndex;
             try
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    var gridIndex = dgvUsers.HitTest(e.X, e.Y).RowIndex;
                     this.dgvUsers.Rows[gridIndex].Cells["EmployeeNo"].ReadOnly = true;
+                    if (columnIndex == 13)
+                    {
+                        MessageBox.Show("Puchaste en la imagen");
+                    }
                 }
                 if (e.Button == MouseButtons.Right)
                 {
-                    var gridIndex = dgvUsers.HitTest(e.X, e.Y).RowIndex;
-
                     if (gridIndex >= 0)
                     {
                         employeeNo = dgvExistingRecords.Rows[gridIndex].Cells["EmployeeNo"].Value.ToString();
@@ -124,16 +130,22 @@ namespace Database
 
         private void dgvExistingRecords_MouseClick(object sender, MouseEventArgs e)
         {
+            var gridIndex = dgvExistingRecords.HitTest(e.X, e.Y).RowIndex;
+            var columnIndex = dgvExistingRecords.HitTest(e.X, e.Y).ColumnIndex;
             try
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    var gridIndex = dgvExistingRecords.HitTest(e.X, e.Y).RowIndex;
                     this.dgvExistingRecords.Rows[gridIndex].Cells["EmployeeNo"].ReadOnly = true;
+                    if (columnIndex == 13)
+                    {
+                        var employeeNumber = dgvExistingRecords.Rows[gridIndex].Cells["employeeNo"].Value.ToString();
+                        this.dgvExistingRecords.Rows[gridIndex].Cells["UserImageRoute"].ReadOnly = true;
+                        UpdateImage(employeeNumber);
+                    }
                 }
                 if (e.Button == MouseButtons.Right)
                 {
-                    var gridIndex = dgvExistingRecords.HitTest(e.X, e.Y).RowIndex;
                     if (gridIndex >= 0)
                     {
                         employeeNo = dgvExistingRecords.Rows[gridIndex].Cells["EmployeeNo"].Value.ToString();
@@ -188,9 +200,45 @@ namespace Database
                 tabControl1.SelectTab(tbpExistingRecords);
             }
         }
-        #endregion
+
+        #endregion Events
 
         #region Methods
+
+        private async void UpdateImage(string employeeNumber)
+        {
+            var jObject = new JObject();
+
+            imageRouteDialog = new OpenFileDialog();
+            imageRouteDialog.Filter = "Image files (*.jpg)|*.jpg";
+            imageRouteDialog.Title = "Pick employee image";
+            imageRouteDialog.ShowDialog();
+            try
+            {
+                if (!String.IsNullOrEmpty(imageRouteDialog.FileName))
+                {
+                    fileStream = File.OpenRead(imageRouteDialog.FileName);
+                    if (fileStream.Length <= 5120000 && MessageBox.Show("Do you wish to update this user's image?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        jObject["Column"] = "UserImageRoute";
+                        jObject["Value"] = generalManager.StoreImage(imageRouteDialog.FileName, employeeNumber);
+                        jObject["EmployeeNo"] = employeeNumber;
+                        generalManager.StoreImage(imageRouteDialog.FileName, employeeNumber);
+                        imageRouteDialog.Dispose();
+                        if (await dataManager.UpdateIndividualRow(jObject.ToString(), userName) == true.ToString())
+                        {
+                            MessageBox.Show("Image was updated successfully");
+                            RefillRecords();
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         private async Task SaveAll()
         {
             try
@@ -213,6 +261,7 @@ namespace Database
                 MessageBox.Show("Images could not be saved");
             }
         }
+
         private string SaveImages(Batch batchList)
         {
             var newRoute = "";
@@ -260,7 +309,7 @@ namespace Database
             }
         }
 
-        //Create 
+        //Create
         private void CallWindow()
         {
             View.Form2 f2 = new View.Form2();
@@ -279,50 +328,55 @@ namespace Database
         }
 
         //Pura mentira
-        private void TestingInfo()
-        {
-            var _batch = new Batch
-            {
-                PersonName = "Cesar Enrique Avila Meza",
-                BirthDate = "20 DE SEPTIEMBRE 1992",
-                EmployeeNo = "00000766",
-                EducationLevel = "Licenciature",
-                CarreerName = "ADMINISTRACION INDUSTRIAL",
-                PersonalMail = "cesar.avila.ipn@gmail.com",
-                CURP = "AIMC920920HDFVZS03",
-                INE = "1234567890",
-                Gender = "Male",
-                Bloodtype = "O+",
-                MaritalStatus = "Married",
-                RFC = "1234567890",
-                PhoneNumber = "1234567890",
-                UserImageRoute = "",
 
-                HSBCAccount = "1234567890",
-                InfonavitNo = "1234567890",
-                PassportNo = "",
-                PassportExpiration = "",
-                USVisaNo = "",
-                USVisaExpiration = "",
-                BirthState = "CDMX",
-                CurrentAddress = "AV DIVISION DEL NORTE 221 LAGOS DE MORENO JALISCO",
-                EmerContactRelationship = "Spouse",
-                EmerContactName = "ALETHIA MABEL GUTIERREZ VAZQUEZ",
-                EmerContactPhone = "5511920494",
+        #region TestInfo
 
-                Department = "Administration",
-                Area = "HR",
-                Position = "Recluitment Specialist",
-                PaymentType = "Biweekly",
-                MailAccount = "Cesaravila@xinpoint.com",
-                BPMAccount = "Cesaravila",
-                ERPAccount = "",
-                Transportation = "Company",
-                PickupColony = "SAN MIGUEL",
-                PickupRoute = "RUTA SAN MIGUEL",
-            };
-            batchList.Add(_batch);
-        }
+        //private void TestingInfo()
+        //{
+        //    var _batch = new Batch
+        //    {
+        //        PersonName = "Cesar Enrique Avila Meza",
+        //        BirthDate = "20 DE SEPTIEMBRE 1992",
+        //        EmployeeNo = "00000766",
+        //        EducationLevel = "Licenciature",
+        //        CarreerName = "ADMINISTRACION INDUSTRIAL",
+        //        PersonalMail = "cesar.avila.ipn@gmail.com",
+        //        CURP = "AIMC920920HDFVZS03",
+        //        INE = "1234567890",
+        //        Gender = "Male",
+        //        Bloodtype = "O+",
+        //        MaritalStatus = "Married",
+        //        RFC = "1234567890",
+        //        PhoneNumber = "1234567890",
+        //        UserImageRoute = "",
+
+        //        HSBCAccount = "1234567890",
+        //        InfonavitNo = "1234567890",
+        //        PassportNo = "",
+        //        PassportExpiration = "",
+        //        USVisaNo = "",
+        //        USVisaExpiration = "",
+        //        BirthState = "CDMX",
+        //        CurrentAddress = "AV DIVISION DEL NORTE 221 LAGOS DE MORENO JALISCO",
+        //        EmerContactRelationship = "Spouse",
+        //        EmerContactName = "ALETHIA MABEL GUTIERREZ VAZQUEZ",
+        //        EmerContactPhone = "5511920494",
+
+        //        Department = "Administration",
+        //        Area = "HR",
+        //        Position = "Recluitment Specialist",
+        //        PaymentType = "Biweekly",
+        //        MailAccount = "Cesaravila@xinpoint.com",
+        //        BPMAccount = "Cesaravila",
+        //        ERPAccount = "",
+        //        Transportation = "Company",
+        //        PickupColony = "SAN MIGUEL",
+        //        PickupRoute = "RUTA SAN MIGUEL",
+        //    };
+        //    batchList.Add(_batch);
+        //}
+
+        #endregion TestInfo
 
         private async Task SaveData()
         {
@@ -339,7 +393,7 @@ namespace Database
                 else
                 {
                     MessageBox.Show(processResult);
-                } 
+                }
             }
         }
 
@@ -353,6 +407,20 @@ namespace Database
                 info.SetValue(item, value);
             }
         }
-        #endregion
+
+        #endregion Methods
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                var result = generalManager.OnClosing();
+                if (!result.Item2)
+                {
+                    MessageBox.Show(result.Item1);
+                    e.Cancel = true;
+                }
+            }
+        }
     }
 }

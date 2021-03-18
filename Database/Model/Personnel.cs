@@ -18,6 +18,7 @@
         private string userImageRoute;
 
         #region GetSet
+
         public string PersonName { get => personName; set => personName = value; }
         public string BirthDate { get => birthDate; set => birthDate = value; }
         public string EmployeeNo { get => employeeNo; set => employeeNo = value; }
@@ -32,7 +33,8 @@
         public string RFC { get => rFC; set => rFC = value; }
         public string PhoneNumber { get => phoneNumber; set => phoneNumber = value; }
         public string UserImageRoute { get => userImageRoute; set => userImageRoute = value; }
-        #endregion
+
+        #endregion GetSet
     }
 
     public class SecondaryData
@@ -51,6 +53,7 @@
         private string iMSSNo;
 
         #region GetSet
+
         public string HSBCAccount { get => hSBCAccount; set => hSBCAccount = value; }
         public string InfonavitNo { get => infonavitNo; set => infonavitNo = value; }
         public string PassportNo { get => passportNo; set => passportNo = value; }
@@ -63,7 +66,8 @@
         public string EmerContactName { get => emerContactName; set => emerContactName = value; }
         public string EmerContactPhone { get => emerContactPhone; set => emerContactPhone = value; }
         public string IMSSNo { get => iMSSNo; set => iMSSNo = value; }
-        #endregion
+
+        #endregion GetSet
     }
 
     public class DepartmentData
@@ -80,6 +84,7 @@
         private string pickupRoute;
 
         #region GetSet
+
         public string Department { get => department; set => department = value; }
         public string Area { get => area; set => area = value; }
         public string PaymentType { get => paymentType; set => paymentType = value; }
@@ -90,7 +95,8 @@
         public string PickupColony { get => pickupColony; set => pickupColony = value; }
         public string PickupRoute { get => pickupRoute; set => pickupRoute = value; }
         public string Position { get => position; set => position = value; }
-        #endregion
+
+        #endregion GetSet
     }
 
     public class Batch
@@ -135,6 +141,7 @@
         private string pickupRoute;
 
         #region GetSet
+
         public string PersonName { get => personName; set => personName = value; }
         public string BirthDate { get => birthDate; set => birthDate = value; }
         public string EmployeeNo { get => employeeNo; set => employeeNo = value; }
@@ -170,8 +177,9 @@
         public string ERPAccount { get => eRPAccount; set => eRPAccount = value; }
         public string Transportation { get => transportation; set => transportation = value; }
         public string PickupColony { get => pickupColony; set => pickupColony = value; }
-        public string PickupRoute { get => pickupRoute; set => pickupRoute = value; }        
-        #endregion
+        public string PickupRoute { get => pickupRoute; set => pickupRoute = value; }
+
+        #endregion GetSet
     }
 
     public class LoginObject

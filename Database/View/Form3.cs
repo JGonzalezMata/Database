@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Database.Model;
+using System;
 using System.Windows.Forms;
-using Database.Model;
 
 namespace Database.View
 {
@@ -15,6 +8,7 @@ namespace Database.View
     {
         private Personnel _personnel;
         private SecondaryData _secondaryData;
+
         public Form3(Form2 f2, Personnel getPersonnel)
         {
             InitializeComponent();
@@ -41,9 +35,10 @@ namespace Database.View
             this.Close();
         }
 
-        #endregion
+        #endregion Buttons
 
         #region Events
+
         private void txtPassport_Leave(object sender, EventArgs e)
         {
             if (!String.IsNullOrEmpty(txtPassport.Text))
@@ -67,7 +62,8 @@ namespace Database.View
                 dtpVisaExp.Enabled = false;
             }
         }
-        #endregion
+
+        #endregion Events
 
         #region Methods
 
@@ -90,8 +86,8 @@ namespace Database.View
         {
             var getPassportExpiration = "";
             var getVisaExpiration = "";
-            if(dtpPassportExp.Enabled) getPassportExpiration = dtpPassportExp.Value.ToString("MM/yyyy");
-            if(dtpVisaExp.Enabled) getVisaExpiration = dtpVisaExp.Value.ToString("MM/yyyy");
+            if (dtpPassportExp.Enabled) getPassportExpiration = dtpPassportExp.Value.ToString("MM/yyyy");
+            if (dtpVisaExp.Enabled) getVisaExpiration = dtpVisaExp.Value.ToString("MM/yyyy");
             var secData = new SecondaryData()
             {
                 HSBCAccount = txtHSBC.Text,
@@ -100,7 +96,7 @@ namespace Database.View
                 BirthState = txtBirthState.Text,
                 InfonavitNo = txtInfonavit.Text,
                 PassportExpiration = getPassportExpiration,
-                USVisaExpiration  = getVisaExpiration,
+                USVisaExpiration = getVisaExpiration,
                 CurrentAddress = txtCurrentAddress.Text,
                 EmerContactRelationship = cmbEmerContactRelation.SelectedItem.ToString(),
                 EmerContactName = txtEmerName.Text,
@@ -110,6 +106,7 @@ namespace Database.View
 
             _secondaryData = secData;
         }
-        #endregion
+
+        #endregion Methods
     }
 }

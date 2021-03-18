@@ -1,27 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using Database.Controller;
 using Database.Model;
-using Database.Controller;
+using System;
 using System.IO;
+using System.Windows.Forms;
 
 namespace Database.View
 {
     public partial class Form2 : Form
     {
         #region Declare
+
         private Personnel _personnel;
-        private PrimDataVal _validate;
+        private readonly PrimDataVal _validate;
         private OpenFileDialog imageRouteDialog;
         private FileStream fileStream;
         private string ImageRoute = "";
-        #endregion
+
+        #endregion Declare
 
         public Form2()
         {
@@ -31,6 +26,7 @@ namespace Database.View
         }
 
         #region Buttons
+
         private void btnNext_Click(object sender, EventArgs e)
         {
             DataBind();
@@ -44,7 +40,7 @@ namespace Database.View
             this.Close();
         }
 
-        #endregion
+        #endregion Buttons
 
         #region Methods
 
@@ -91,15 +87,16 @@ namespace Database.View
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
                 throw;
             }
         }
-        #endregion
+
+        #endregion Methods
 
         #region Events
+
         private void cmbEducation_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbEducation.SelectedItem.ToString() == "Licenciature" || cmbEducation.SelectedItem.ToString() == "Engineering" || cmbEducation.SelectedItem.ToString() == "Master's Degree" || cmbEducation.SelectedItem.ToString() == "Doctorate")
@@ -121,6 +118,7 @@ namespace Database.View
         {
             ImageLoader();
         }
-        #endregion
+
+        #endregion Events
     }
 }

@@ -42,6 +42,7 @@
         private string pickupRoute;
 
         #region GetSet
+
         public string PersonName { get => personName; set => personName = value; }
         public string BirthDate { get => birthDate; set => birthDate = value; }
         public string EmployeeNo { get => employeeNo; set => employeeNo = value; }
@@ -78,6 +79,7 @@
         public string Transportation { get => transportation; set => transportation = value; }
         public string PickupColony { get => pickupColony; set => pickupColony = value; }
         public string PickupRoute { get => pickupRoute; set => pickupRoute = value; }
-        #endregion
+
+        #endregion GetSet
     }
 }

@@ -161,6 +161,7 @@ namespace Database
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Main View";
             this.Activated += new System.EventHandler(this.Form1_Activated);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.tabControl1.ResumeLayout(false);
             this.tbpExistingRecords.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvExistingRecords)).EndInit();
