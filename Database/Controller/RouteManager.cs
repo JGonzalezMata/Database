@@ -1,20 +1,21 @@
 ﻿using System;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace Database.Controller
 {
     public class RouteManager
     {
-        private string _appPath;
-        private static string _images = "Images";
-        private static string _temp = "TempFiles";
+        private readonly string _appPath;
+        private readonly static string _images = "Images";
+        private readonly static string _temp = "TempFiles";
+
         public RouteManager(string appPath)
         {
             _appPath = appPath;
         }
 
         #region PDF Manager
+
         private string CreateTemporaryRoute
         {
             get { return Path.Combine(_appPath, _temp); }
@@ -48,7 +49,7 @@ namespace Database.Controller
             }
 
             return Tuple.Create(result, excecution);
-        } 
+        }
 
         public bool CheckIfOpen(string fileName)
         {
@@ -73,9 +74,11 @@ namespace Database.Controller
 
             return isOpen;
         }
-        #endregion
+
+        #endregion PDF Manager
 
         #region Image manager
+
         public string GenerateImageRoute
         {
             get { return Path.Combine(_appPath, _images); }
@@ -98,7 +101,8 @@ namespace Database.Controller
             {
                 Directory.CreateDirectory(route);
             }
-        } 
-        #endregion
+        }
+
+        #endregion Image manager
     }
 }

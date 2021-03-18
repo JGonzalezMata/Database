@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Database.Model;
+using System;
 using System.Windows.Forms;
-using Database.Model;
 
 namespace Database.View
 {
@@ -16,6 +9,7 @@ namespace Database.View
         private Personnel _personnel;
         private SecondaryData _secondaryData;
         private DepartmentData _departmentData;
+
         public Form4(Form3 f3, Personnel getPersonnel, SecondaryData getSecondaryData)
         {
             InitializeComponent();
@@ -26,14 +20,16 @@ namespace Database.View
             _personnel = getPersonnel;
             _secondaryData = getSecondaryData;
         }
+
         #region Buttons
+
         private void btnNext_Click(object sender, EventArgs e)
         {
             InputAllIntoBatch(_personnel, _secondaryData);
             Form1.checkIfAlreadyEnter = 1;
             this.Close();
         }
-        
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             _personnel = null;
@@ -41,7 +37,8 @@ namespace Database.View
             _departmentData = null;
             this.Close();
         }
-        #endregion
+
+        #endregion Buttons
 
         #region Methods
 
@@ -50,6 +47,7 @@ namespace Database.View
             var _batch = new Batch
             {
                 #region Batch
+
                 PersonName = personnel.PersonName,
                 BirthDate = personnel.BirthDate,
                 EmployeeNo = personnel.EmployeeNo,
@@ -87,8 +85,9 @@ namespace Database.View
                 ERPAccount = txtERPAcc.Text,
                 Transportation = cmbTransportation.SelectedItem.ToString(),
                 PickupColony = txtPickupColony.Text,
-                PickupRoute = txtRoute.Text, 
-                #endregion
+                PickupRoute = txtRoute.Text,
+
+                #endregion Batch
             };
 
             Form1.batch = _batch;
@@ -98,7 +97,7 @@ namespace Database.View
         {
             if (!mailName.Contains("@xinpoint.com"))
             {
-                return mailName + "@xinpoint.com"; 
+                return mailName + "@xinpoint.com";
             }
             else
             {
@@ -118,9 +117,11 @@ namespace Database.View
                 return companyMail;
             }
         }
-        #endregion
+
+        #endregion Methods
 
         #region Events
+
         private void cmbTransportation_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbTransportation.SelectedItem.ToString() == "Company")
@@ -144,8 +145,7 @@ namespace Database.View
         {
             txtCompanyMail.Text = FillMail(txtCompanyMail.Text);
         }
-        #endregion
 
-
+        #endregion Events
     }
 }
